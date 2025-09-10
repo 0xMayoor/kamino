@@ -1,0 +1,10 @@
+[features]
+seeds = false
+skip-lint = false
+
+[programs.localnet]
+kvault = "KvauGMspG5k6rtzrqqn7WNn3oZdyKqLKwK2XWQ8FLjd"
+
+[provider]
+cluster = "localnet"
+wallet = "/wallet.json"
