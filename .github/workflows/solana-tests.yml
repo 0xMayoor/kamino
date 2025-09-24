@@ -1,0 +1,47 @@
+name: Solana CI Tests
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      SOLANA_VERSION: stable
+      RUST_TOOLCHAIN: nightly
+      ANCHOR_VERSION: latest
+      VALIDATOR_RPC: http://127.0.0.1:8899
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Detect project type
+        id: detect
+        shell: bash
+        run: |
+          if git ls-files '**/Anchor.toml' | grep -q .; then
+            echo "anchor=true" >> $GITHUB_OUTPUT
+          else
+            echo "anchor=false" >> $GITHUB_OUTPUT
+          fi
+          if git ls-files '**/Cargo.toml' | grep -q .; then
+            echo "has_cargo=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_cargo=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Set up Rust nightly
+        uses: dtolnay/rust-toolchain@nightly
+        with:
+          toolchain: nightly
+
+      - name: Add bpfel-unknown-unknown target
+        shell: bash
+        run: |
+          rustup target add bpfel-unknown-unknown || echo "Target unavailable, skipping"
+
+      # ... (rest of your workflow remains unchanged) ...
