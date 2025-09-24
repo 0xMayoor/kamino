@@ -1,0 +1,3 @@
+[submodule "submodule_name"]
+	path = path/to/submodule
+	url = https://example.com/placeholder.git
